@@ -1,0 +1,11 @@
+{
+  "name": "tnova-vim-backend",
+  "version": "0.0.1",
+  "license": "GPL-3.0",
+  "private": true,
+  "dependencies": {
+    "cron": "^1.0.9",
+    "influx": "^3.4.0",
+    "moment": "^2.10.3"
+  }
+}
