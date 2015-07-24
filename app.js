@@ -22,19 +22,20 @@ var moment = require('moment');
 moment().format();
 
 // Configuration variables
-var pollingInterval = 10000; // in milliseconds
-var dbHost = 'localhost';
-var dbUsername = 'root';
-var dbPassword = 'root';
-var dbName = 'statsdb';
-var tenantName = 'tenant';
-var identityHost = 'localhost';
-var identityPort = 5000;
-var identityUsername = 'username';
-var identityPassword = 'pass';
-var ceilometerHostname = 'localhost';
-var ceilometerPort = 8777;
-var instanceId = '27ad39af-0267-4f81-bdc6-deda0d64c9ac';
+var config = require('config');
+var dbHost             = config.get('database.host');
+var dbUsername         = config.get('database.username');
+var dbPassword         = config.get('database.password');
+var dbName             = config.get('database.name');
+var pollingInterval    = config.get('ceilometer.pollingInterval');
+var ceilometerHostname = config.get('ceilometer.host');
+var ceilometerPort     = config.get('ceilometer.port');
+var identityHost       = config.get('identity.host');
+var identityPort       = config.get('identity.port');
+var tenantName         = config.get('identity.tenantName');
+var identityUsername   = config.get('identity.username');
+var identityPassword   = config.get('identity.password');
+var instanceId         = config.get('monitoring.instanceIds')[0];
 
 // Database connection instantiation
 var dbInflux = influx({host : dbHost, username : dbUsername,

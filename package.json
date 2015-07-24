@@ -4,6 +4,7 @@
   "license": "GPL-3.0",
   "private": true,
   "dependencies": {
+    "config": "^1.14.0",
     "cron": "^1.0.9",
     "influx": "^3.4.0",
     "moment": "^2.10.3"

@@ -1,0 +1,25 @@
+{
+  "database": {
+    "host": "localhost",
+    "username": "root",
+    "password": "root",
+    "name": "statsdb"
+  },
+  "ceilometer": {
+    "pollingInterval": 10000,
+    "host": "localhost",
+    "port": 8777
+  },
+  "identity": {
+    "host": "localhost",
+    "port": 5000,
+    "tenantName": "tenant",
+    "username": "username",
+    "password": "pass"
+  },
+  "monitoring": {
+    "instanceIds":[
+      "27ad39af-0267-4f81-bdc6-deda0d64c9ac"
+    ]
+  }
+}
