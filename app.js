@@ -108,7 +108,8 @@ var writeMeasurement = function (name, value, timestamp) {
 			path: '/v2.0/tokens',
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'Content-Length': Buffer.byteLength(identity)
 			}
 		};
 
