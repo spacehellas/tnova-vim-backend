@@ -14,7 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+var winston = require('winston');
 var influx = require('influx');
 var http = require('http');
 var CronJob = require('cron').CronJob;
@@ -23,6 +23,7 @@ moment().format();
 
 // Configuration variables
 var config = require('config');
+var loggingLevel       = config.get('loggingLevel');
 var dbHost             = config.get('database.host');
 var dbUsername         = config.get('database.username');
 var dbPassword         = config.get('database.password');
@@ -37,6 +38,9 @@ var identityUsername   = config.get('identity.username');
 var identityPassword   = config.get('identity.password');
 var instanceId         = config.get('monitoring.instanceIds')[0];
 
+winston.level = loggingLevel;
+winston.log('info', 'T-NOVA VIM monitoring system');
+
 // Database connection instantiation
 var dbInflux = influx({host : dbHost, username : dbUsername,
 	password : dbPassword, database : dbName});
@@ -45,7 +49,7 @@ var dbInflux = influx({host : dbHost, username : dbUsername,
 
 // Delete data older than 2 days at 3:05 every day
 new CronJob('5 3 * * * *', function() {
-	console.log('Erasing old data from 2 days...');
+	winston.log('verbose', 'Erasing old data from 2 days...');
 	dbInflux.query('delete from cpu_util where time < now() - 2d');
 	dbInflux.query('delete from disk.read.requests.rate where time < now() - 2d');
 	dbInflux.query('delete from /^space-2.*/ where time < now() - 2d');
@@ -53,7 +57,7 @@ new CronJob('5 3 * * * *', function() {
 }, null, true, 'Europe/Athens');
 
 var writeMeasurement = function (name, value, timestamp) {
-	console.log(name + ': ' + value + ' recorded at: ' + timestamp.toDate());
+	winston.log('verbose', name + ': ' + value + ' recorded at: ' + timestamp.toDate());
 	dbInflux.writePoint(name, { time: timestamp.toDate(), value: value});
 },
 
@@ -131,7 +135,7 @@ var writeMeasurement = function (name, value, timestamp) {
 		});
 
 		tokenRequest.on('error', function(e) {
-			console.log('Problem with request: ' + e.message);
+			winston.log('error', 'Problem with request: ' + e.message);
 		});
 
 		tokenRequest.write(identity);
