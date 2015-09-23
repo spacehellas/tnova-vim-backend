@@ -6,7 +6,7 @@
   "dependencies": {
     "config": "^1.14.0",
     "cron": "^1.0.9",
-    "influx": "^3.4.0",
+    "influent": "^0.4.0",
     "moment": "^2.10.3",
     "winston": "^1.0.1"
   }

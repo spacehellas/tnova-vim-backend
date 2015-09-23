@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 var winston = require('winston');
-var influx = require('influx');
+var influent = require("influent");
 var http = require('http');
 var CronJob = require('cron').CronJob;
 var moment = require('moment');
@@ -25,6 +25,7 @@ moment().format();
 var config = require('config');
 var loggingLevel       = config.get('loggingLevel');
 var dbHost             = config.get('database.host');
+var dbPort             = config.get('database.port');
 var dbUsername         = config.get('database.username');
 var dbPassword         = config.get('database.password');
 var dbName             = config.get('database.name');
@@ -42,8 +43,10 @@ winston.level = loggingLevel;
 winston.log('info', 'T-NOVA VIM monitoring system');
 
 // Database connection instantiation
-var dbInflux = influx({host : dbHost, username : dbUsername,
-	password : dbPassword, database : dbName});
+var dbInflux = influent.createClient(
+	{username : dbUsername,	password : dbPassword,
+		database : dbName, server: [{ protocol : "http", host : dbHost, port : dbPort}]}
+);
 
 // TODO Do not issue new token if the previous one is not expired
 
@@ -58,8 +61,16 @@ new CronJob('5 3 * * * *', function() {
 
 var writeMeasurement = function (name, value, timestamp) {
 	winston.log('verbose', name + ': ' + value + ' recorded at: ' + timestamp.toDate());
-	dbInflux.writePoint(name, { time: timestamp.toDate(), value: value});
-},
+	dbInflux.then(function (client) {
+		client.writeOne({
+			key: name,
+			fields: {
+				value: value
+			},
+			timestamp: timestamp.toDate()
+		});
+	});
+	},
 
 	getMeasurement = function (tokenId, measurementType) {
 		// OpenStack polls every 10 minutes for measurements by default

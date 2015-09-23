@@ -2,6 +2,7 @@
   "loggingLevel" : "info",
   "database": {
     "host": "localhost",
+    "port": 8086,
     "username": "root",
     "password": "root",
     "name": "statsdb"
