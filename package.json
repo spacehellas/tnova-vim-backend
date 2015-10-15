@@ -8,6 +8,7 @@
     "cron": "^1.0.9",
     "influent": "^0.4.0",
     "moment": "^2.10.3",
+    "request-promise": "^0.4.3",
     "winston": "^1.0.1"
   }
 }
