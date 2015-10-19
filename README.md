@@ -32,3 +32,26 @@ Make sure that you have installed the necessary Node.js modules and modified
 ```sh
 docker build --tag=tnova/vim-backend .
 ```
+
+## Running a Docker container
+
+**Step 1.** Launch an InfluxDB container:
+
+```sh
+docker run --name tnova-monitoring-influxdb -d \
+    -e ADMIN_USER="root" -e INFLUXDB_INIT_PWD="root" \
+    -e PRE_CREATE_DB="statsdb" -e COLLECTD_DB="statsdb" \
+    -e COLLECTD_BINDING=':25826' -e COLLECTD_RETENTION_POLICY="statspolicy" \
+    --publish 8083:8083 --publish 8086:8086 --publish 25826:25826/udp \
+    --volume=/var/influxdb:/data \
+    tutum/influxdb
+```
+
+**Step 2.** Launch the monitoring container:
+
+```sh
+docker run --name=tnova-vim-backend -d \
+    --link tnova-monitoring-influxdb:influxdb \
+    --publish 8080:3000 \
+    tnova/vim-backend:latest
+```
