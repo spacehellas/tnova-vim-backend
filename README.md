@@ -23,3 +23,12 @@ cd tnova-vim-backend
 npm install
 node app.js
 ```
+
+## Building a Docker image
+
+Make sure that you have installed the necessary Node.js modules and modified
+[config/default.json](config/default.json) before building the Docker image.
+
+```sh
+docker build --tag=tnova/vim-backend .
+```
