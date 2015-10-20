@@ -26,7 +26,12 @@ var CronJob = require('cron').CronJob;
 var config = require('config');
 var loggingLevel       = config.get('loggingLevel');
 var dbHost             = config.get('database.host');
-var dbPort             = config.get('database.port');
+var dbPortTemp         = config.get('database.port');
+if (typeof dbPortTemp === 'string' || dbPortTemp instanceof String) {
+	var dbPort = parseInt(dbPortTemp);
+} else {
+	var dbPort = dbPortTemp;
+}
 var dbUsername         = config.get('database.username');
 var dbPassword         = config.get('database.password');
 var dbName             = config.get('database.name');

@@ -1,0 +1,6 @@
+{
+  "database": {
+    "host": "INFLUXDB_PORT_8086_TCP_ADDR",
+    "port": "INFLUXDB_PORT_8086_TCP_PORT"
+  }
+}
