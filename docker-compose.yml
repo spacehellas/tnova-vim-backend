@@ -1,0 +1,22 @@
+tsdb:
+  image: tutum/influxdb:0.9
+  environment:
+    - PRE_CREATE_DB=statsdb
+    - COLLECTD_DB=statsdb
+    - COLLECTD_BINDING=:8096
+  ports:
+    - "8083:8083"
+    - "8086:8086"
+    - "8096:8096/udp"
+  volumes:
+    - /srv/docker/tnova_vim/tsdb:/data
+tnova-monitoring:
+  image: tnova/vim-backend:latest
+  links:
+    - tsdb:influxdb
+  ports:
+    - "8080:3000"
+visualisation:
+  image: grafana/grafana
+  ports:
+    - "3000:3000"
