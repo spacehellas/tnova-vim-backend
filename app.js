@@ -46,15 +46,6 @@ var dbInflux = influent.createClient(
     database : dbName, server: [{ protocol : "http", host : dbHost, port : dbPort}]}
 );
 
-// Delete data older than 2 days at 3:05 every day
-new CronJob('5 3 * * * *', function() {
-  winston.log('verbose', 'Erasing old data from 2 days...');
-  dbInflux.query('delete from cpu_util where time < now() - 2d');
-  dbInflux.query('delete from disk.read.requests.rate where time < now() - 2d');
-  dbInflux.query('delete from /^space-2.*/ where time < now() - 2d');
-dbInflux.query('delete from /^ubuntu-amd64.*/ where time < now() - 2d');
-}, null, true, 'Europe/Athens');
-
 var writeMeasurement = function (name, value, timestamp) {
   winston.log('verbose', name + ': ' + value + ' recorded at: ' + timestamp.toDate());
   dbInflux.then(function (client) {
