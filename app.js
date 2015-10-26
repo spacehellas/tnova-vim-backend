@@ -156,6 +156,36 @@ server.route({
 });
 
 server.route({
+	method: 'GET',
+	path: '/api/meters/{host}/cpuidle',
+	config: {
+		tags: ['api'],
+		description: 'Get the latest value of idle CPU usage on a specific host in jiffies',
+		validate: {
+			params: {
+				host: Joi.string().required().description('host name')
+			}
+		},
+		handler: function (request, reply) {
+			dbInflux.then(function (client) {
+				client
+					.query("SELECT LAST(value) FROM aggregation_value WHERE host='" + request.params.host + "' AND type='cpu' AND type_instance='idle'")
+					.then(function (result) {
+						if('series' in result.results[0]) {
+							var meter = {};
+							meter['date'] = result.results[0].series[0].values[0][0];
+							meter['value'] = result.results[0].series[0].values[0][1];
+							reply(meter);
+						} else {
+							reply('No hostname found.').code(404);
+						}
+					});
+			});
+		}
+	}
+});
+
+server.route({
 	method: 'POST',
 	path: '/api/subscribe',
 	config: {
