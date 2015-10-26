@@ -185,6 +185,49 @@ server.route({
 	}
 });
 
+function formatBytes(bytes,decimals) {
+	if(bytes == 0) return '0 Byte';
+	var k = 1000;
+	var dm = decimals + 1 || 3;
+	var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+	var i = Math.floor(Math.log(bytes) / Math.log(k));
+	return (bytes / Math.pow(k, i)).toPrecision(dm) + ' ' + sizes[i];
+}
+
+server.route({
+	method: 'GET',
+	path: '/api/meters/{host}/fs',
+	config: {
+		tags: ['api'],
+		description: 'Get the latest root filesystem status on a specific host',
+		validate: {
+			params: {
+				host: Joi.string().required().description('host name')
+			}
+		},
+		handler: function (request, reply) {
+			dbInflux.then(function (client) {
+				client
+					.query("SELECT * FROM df_value WHERE host='" + request.params.host + "' AND instance='root' AND time > now() - 30s")
+					.then(function (result) {
+						if('series' in result.results[0]) {
+							var measurement = result.results[0].series[0];
+							var meter = {};
+							meter['date'] = measurement.values[0][0];
+							for (var i=0; i<measurement.values.length; i++) {
+								meter[measurement.values[i][4]] =
+									formatBytes(measurement.values[i][5],2)
+							}
+							reply(meter);
+						} else {
+							reply('No hostname found.').code(404);
+						}
+					});
+			});
+		}
+	}
+});
+
 server.route({
 	method: 'POST',
 	path: '/api/subscribe',
