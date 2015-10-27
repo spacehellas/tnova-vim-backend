@@ -15,84 +15,84 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
    */
 
-var config = require('config'),
-  moment = require('moment'),
-    rp = require('request-promise'),
-      winston = require('winston');
+var config  = require('config');
+var moment  = require('moment');
+var rp      = require('request-promise');
+var winston = require('winston');
 
-      moment().format();
+moment().format();
 
-      var openStack = exports;
+var openStack = exports;
 
-      openStack.getToken = function () {
+openStack.getToken = function() {
 
-        var identityHost     = config.get('identity.host');
-        var identityPort     = config.get('identity.port');
-        var tenantName       = config.get('identity.tenantName');
-        var identityUsername = config.get('identity.username');
-        var identityPassword = config.get('identity.password');
+  var identityHost     = config.get('identity.host');
+  var identityPort     = config.get('identity.port');
+  var tenantName       = config.get('identity.tenantName');
+  var identityUsername = config.get('identity.username');
+  var identityPassword = config.get('identity.password');
 
-        var options = {
-          uri: 'http://' + identityHost + ':' + identityPort + '/v2.0/tokens',
-          method: 'POST',
-          json: true,
-          simple: true,
-          body: {
-            auth: {
-              tenantName: tenantName,
-              passwordCredentials: {
-                username: identityUsername,
-                password: identityPassword
-              }
-            }
-          }
-        };
+  var options = {
+    uri: 'http://' + identityHost + ':' + identityPort + '/v2.0/tokens',
+    method: 'POST',
+    json: true,
+    simple: true,
+    body: {
+      auth: {
+        tenantName: tenantName,
+        passwordCredentials: {
+          username: identityUsername,
+          password: identityPassword
+        }
+      }
+    }
+  };
 
-        options.transform = function (data) {
-          var token = {};
-          winston.log('debug', data);
-          token.id = data.access.token.id;
-          token.expires_at = data.access.token.expires;
-          return token;
-        };
+  options.transform = function(data) {
+    var token = {};
+    winston.log('debug', data);
+    token.id = data.access.token.id;
+    token.expiresAt = data.access.token.expires;
+    return token;
+  };
 
-        return rp(options);
-      };
+  return rp(options);
+};
 
-      openStack.getMeasurement = function (tokenId, measurementType) {
+openStack.getMeasurement = function(tokenId, measurementType) {
 
-        var ceilometerHostname = config.get('ceilometer.host');
-        var ceilometerPort     = config.get('ceilometer.port');
-        var instanceId         = config.get('monitoring.instanceIds')[0];
+  var ceilometerHostname = config.get('ceilometer.host');
+  var ceilometerPort = config.get('ceilometer.port');
+  var instanceId = config.get('monitoring.instanceIds')[0];
 
-        // OpenStack polls every 10 minutes for measurements by default
-        // This is to ensure Ceilometer has a measurement available
-        var currentTime = moment();
-        currentTime.seconds(0);
-        currentTime.subtract(10, 'minutes');
+  // OpenStack polls every 10 minutes for measurements by default
+  // This is to ensure Ceilometer has a measurement available
+  var currentTime = moment();
+  currentTime.seconds(0);
+  currentTime.subtract(10, 'minutes');
 
-        var measurementUrl = measurementType +
-          '/statistics?aggregate.func=avg&' +
-            'q.field=timestamp&q.op=gt&q.value=' +
-              currentTime.format("YYYY-MM-DDTHH:mm:ss") + '&' +
-                'q.field=resource_id&q.op=eq&q.value=' + instanceId;
+  var measurementUrl = measurementType +
+    '/statistics?aggregate.func=avg&' +
+    'q.field=timestamp&q.op=gt&q.value=' +
+    currentTime.format('YYYY-MM-DDTHH:mm:ss') + '&' +
+    'q.field=resource_id&q.op=eq&q.value=' + instanceId;
 
-                var options = {
-                  uri: 'http://' + ceilometerHostname + ':' + ceilometerPort
-                  + '/v2/meters/' + measurementUrl,
-                  method: 'GET',
-                  simple: true,
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'X-Auth-Token': tokenId
-                  }
-                };
+  var options = {
+    uri: 'http://' + ceilometerHostname + ':' +
+      ceilometerPort + '/v2/meters/' + measurementUrl,
+    method: 'GET',
+    simple: true,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Auth-Token': tokenId
+    }
+  };
 
-                options.transform = function (data) {
-                  var measurement = {};
-                  winston.log('debug', data);
-                  return measurement;
-                };
+  options.transform = function(data) {
+    var measurement = {};
+    winston.log('debug', data);
+    return measurement;
+  };
 
-                return rp(options);
-      };
+  return rp(options);
+};
