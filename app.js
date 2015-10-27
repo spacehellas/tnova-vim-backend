@@ -273,4 +273,6 @@ server.route({
 
 server.start(function() {
   winston.log('info', 'Server running at: ' + server.info.uri);
+  winston.log('info', 'Configured to listen database host ' +
+    dbHost + ' at port ' + dbPort);
 });
