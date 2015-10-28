@@ -4,4 +4,5 @@ MAINTAINER ioannis.koutras@gmail.com
 ADD . .
 
 EXPOSE 3000
-CMD ["node", "app.js"]
+
+ENTRYPOINT ["/entrypoint.sh"]
