@@ -170,7 +170,7 @@ server.route({
 
 server.route({
   method: 'GET',
-  path: '/api/meters/{host}/memfree',
+  path: '/api/measurements/{host}/memfree',
   config: {
     tags: ['api'],
     description: 'Get the latest value of free memory on a specific host',
@@ -196,7 +196,7 @@ server.route({
 
 server.route({
   method: 'GET',
-  path: '/api/meters/{host}/cpuidle',
+  path: '/api/measurements/{host}/cpuidle',
   config: {
     tags: ['api'],
     description: 'Get the latest value of idle CPU usage on a specific host',
@@ -232,7 +232,7 @@ function formatBytes(bytes, decimals) {
 
 server.route({
   method: 'GET',
-  path: '/api/meters/{host}/fs',
+  path: '/api/measurements/{host}/fsfree',
   config: {
     tags: ['api'],
     description: 'Get the latest root filesystem status on a specific host',
