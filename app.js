@@ -90,7 +90,7 @@ var readLastMeasurement = function(host, measurementType, typeInstance, type,
         .then(function(result) {
           if ('series' in result.results[0]) {
 	    var meter = {};
-	    meter.date = result.results[0].series[0].values[0][0];
+	    meter.timestamp = result.results[0].series[0].values[0][0];
 	    meter.value = result.results[0].series[0].values[0][1];
 	    resolve(meter);
           } else {
