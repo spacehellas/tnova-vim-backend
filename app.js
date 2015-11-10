@@ -182,7 +182,9 @@ server.route({
     handler: function(request, reply) {
       readLastMeasurement(request.params.host, 'memory_value', 'free')
 	.then(function(result) {
-	  result.value = formatBytes(result.value, 2);
+	  var res = formatBytes(result.value, 2).split(' ');
+	  result.value = res[0];
+	  result.unit = res[1];
 	  reply(result);
 	})
         .catch(function(reason) {
@@ -197,8 +199,7 @@ server.route({
   path: '/api/meters/{host}/cpuidle',
   config: {
     tags: ['api'],
-    description: 'Get the latest value of idle CPU usage on a specific host ' +
-      'in jiffies',
+    description: 'Get the latest value of idle CPU usage on a specific host',
     validate: {
       params: {
         host: Joi.string().required().description('host name')
@@ -208,6 +209,7 @@ server.route({
       readLastMeasurement(request.params.host, 'aggregation_value',
 		      'idle', 'cpu')
 	.then(function(result) {
+	  result.unit = 'jiffies';
 	  reply(result);
 	})
 	.catch(function(reason) {
@@ -243,7 +245,9 @@ server.route({
       readLastMeasurement(request.params.host, 'df_value', 'free',
 	undefined, 'root')
 	.then(function(result) {
-	  result.value = formatBytes(result.value, 2);
+	  var res = formatBytes(result.value, 2).split(' ');
+	  result.value = res[0];
+	  result.unit = res[1];
 	  reply(result);
 	})
         .catch(function(reason) {
