@@ -92,6 +92,21 @@ var readLastMeasurement = function(host, measurementType, typeInstance, type,
 	    var meter = {};
 	    meter.timestamp = result.results[0].series[0].values[0][0];
 	    meter.value = result.results[0].series[0].values[0][1];
+	    switch(measurementType) {
+	      case 'aggregation_value':
+		meter.units = 'jiffies';
+		break;
+	      case 'memory_value':
+	        var res = formatBytes(meter.value, 2).split(' ');
+	        meter.value = res[0];
+	        meter.unit = res[1];
+		break;
+	      case 'df_value':
+		var res = formatBytes(meter.value, 2).split(' ');
+		meter.value = res[0];
+		meter.unit = res[1];
+		break;
+	    };
 	    resolve(meter);
           } else {
 	    reject(Error('Host or measurement type not found.'));
@@ -182,9 +197,6 @@ server.route({
     handler: function(request, reply) {
       readLastMeasurement(request.params.host, 'memory_value', 'free')
 	.then(function(result) {
-	  var res = formatBytes(result.value, 2).split(' ');
-	  result.value = res[0];
-	  result.unit = res[1];
 	  reply(result);
 	})
         .catch(function(reason) {
@@ -209,7 +221,6 @@ server.route({
       readLastMeasurement(request.params.host, 'aggregation_value',
 		      'idle', 'cpu')
 	.then(function(result) {
-	  result.unit = 'jiffies';
 	  reply(result);
 	})
 	.catch(function(reason) {
@@ -245,9 +256,6 @@ server.route({
       readLastMeasurement(request.params.host, 'df_value', 'free',
 	undefined, 'root')
 	.then(function(result) {
-	  var res = formatBytes(result.value, 2).split(' ');
-	  result.value = res[0];
-	  result.unit = res[1];
 	  reply(result);
 	})
         .catch(function(reason) {
