@@ -21,6 +21,7 @@ var Hapi     = require('hapi');
 var Joi      = require('joi');
 var http     = require('http');
 var CronJob  = require('cron').CronJob;
+var Promise  = require('bluebird');
 
 // Configuration variables
 var config       = require('config');
@@ -64,6 +65,38 @@ var writeMeasurement = function(name, value, timestamp) {
         value: value
       },
       timestamp: timestamp.toDate()
+    });
+  });
+};
+
+var readLastMeasurement = function(host, measurementType, typeInstance, type,
+    instance) {
+  var query = 'SELECT last(value) FROM ' + measurementType + ' WHERE host=\'' +
+    host + '\'';
+  if (typeof(type) !== 'undefined') {
+    query = query + ' AND type=\'' + type + '\'';
+  }
+  if (typeof(typeInstance) !== 'undefined') {
+    query = query + ' AND type_instance=\'' + typeInstance + '\'';
+  }
+  if (typeof(instance) !== 'undefined') {
+    query = query + ' AND instance=\'' + instance + '\'';
+  }
+  return new Promise(function(resolve, reject) {
+    winston.log('debug', 'query: ' + query);
+    dbInflux.then(function(client) {
+      client
+        .query(query)
+        .then(function(result) {
+          if ('series' in result.results[0]) {
+	    var meter = {};
+	    meter.date = result.results[0].series[0].values[0][0];
+	    meter.value = result.results[0].series[0].values[0][1];
+	    resolve(meter);
+          } else {
+	    reject(Error('Host or measurement type not found.'));
+	  }
+        });
     });
   });
 };
@@ -147,21 +180,14 @@ server.route({
       }
     },
     handler: function(request, reply) {
-      dbInflux.then(function(client) {
-        client
-          .query('SELECT last(value) FROM memory_value WHERE host=\'' +
-            request.params.host + '\' AND type_instance=\'free\'')
-          .then(function(result) {
-            if ('series' in result.results[0]) {
-              var meter = {};
-              meter.date = result.results[0].series[0].values[0][0];
-              meter.value = result.results[0].series[0].values[0][1];
-              reply(meter);
-            } else {
-              reply('No hostname found.').code(404);
-            }
-          });
-      });
+      readLastMeasurement(request.params.host, 'memory_value', 'free')
+	.then(function(result) {
+	  result.value = formatBytes(result.value, 2);
+	  reply(result);
+	})
+        .catch(function(reason) {
+	  reply(reason.message).code(404);
+	});
     }
   }
 });
@@ -179,22 +205,14 @@ server.route({
       }
     },
     handler: function(request, reply) {
-      dbInflux.then(function(client) {
-        client
-          .query('SELECT LAST(value) FROM aggregation_value WHERE host=\'' +
-            request.params.host +
-            '\' AND type=\'cpu\' AND type_instance=\'idle\'')
-          .then(function(result) {
-            if ('series' in result.results[0]) {
-              var meter = {};
-              meter.date = result.results[0].series[0].values[0][0];
-              meter.value = result.results[0].series[0].values[0][1];
-              reply(meter);
-            } else {
-              reply('No hostname found.').code(404);
-            }
-          });
-      });
+      readLastMeasurement(request.params.host, 'aggregation_value',
+		      'idle', 'cpu')
+	.then(function(result) {
+	  reply(result);
+	})
+	.catch(function(reason) {
+	  reply(reason.message).code(404);
+	});
     }
   }
 });
@@ -222,25 +240,15 @@ server.route({
       }
     },
     handler: function(request, reply) {
-      dbInflux.then(function(client) {
-        client
-          .query('SELECT * FROM df_value WHERE host=\'' + request.params.host +
-            '\' AND instance=\'root\' AND time > now() - 30s')
-          .then(function(result) {
-            if ('series' in result.results[0]) {
-              var measurement = result.results[0].series[0];
-              var meter = {};
-              meter.date = measurement.values[0][0];
-              for (var i = 0; i < measurement.values.length; i++) {
-                meter[measurement.values[i][4]] =
-                  formatBytes(measurement.values[i][5], 2);
-              }
-              reply(meter);
-            } else {
-              reply('No hostname found.').code(404);
-            }
-          });
-      });
+      readLastMeasurement(request.params.host, 'df_value', 'free',
+	undefined, 'root')
+	.then(function(result) {
+	  result.value = formatBytes(result.value, 2);
+	  reply(result);
+	})
+        .catch(function(reason) {
+	  reply(reason.message).code(404);
+	});
     }
   }
 });
