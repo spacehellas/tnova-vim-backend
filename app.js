@@ -69,10 +69,32 @@ var writeMeasurement = function(name, value, timestamp) {
   });
 };
 
-var readLastMeasurement = function(host, measurementType, typeInstance, type,
-    instance) {
-  var query = 'SELECT last(value) FROM ' + measurementType + ' WHERE host=\'' +
+var getHostLastMeasurementQuery = function(host, measurementType) {
+  var measurement = undefined;
+  var type = undefined;
+  var typeInstance = undefined;
+  var instance = undefined;
+
+  switch(measurementType) {
+    case 'cpuidle':
+      measurement = 'aggregation_value';
+      type = 'cpu';
+      typeInstance = 'idle';
+      break;
+    case 'memfree':
+      measurement = 'memory_value';
+      typeInstance = 'free';
+      break;
+    case 'fsfree':
+      measurement = 'df_value';
+      typeInstance = 'free';
+      instance = 'root'
+      break;
+  }
+
+  var query = 'SELECT last(value) FROM ' + measurement + ' WHERE host=\'' +
     host + '\'';
+
   if (typeof(type) !== 'undefined') {
     query = query + ' AND type=\'' + type + '\'';
   }
@@ -82,7 +104,13 @@ var readLastMeasurement = function(host, measurementType, typeInstance, type,
   if (typeof(instance) !== 'undefined') {
     query = query + ' AND instance=\'' + instance + '\'';
   }
+
+  return query;
+};
+
+var readLastMeasurement = function(host, measurementType) {
   return new Promise(function(resolve, reject) {
+    var query = getHostLastMeasurementQuery(host, measurementType);
     winston.log('debug', 'query: ' + query);
     dbInflux.then(function(client) {
       client
@@ -93,15 +121,15 @@ var readLastMeasurement = function(host, measurementType, typeInstance, type,
 	    meter.timestamp = result.results[0].series[0].values[0][0];
 	    meter.value = result.results[0].series[0].values[0][1];
 	    switch(measurementType) {
-	      case 'aggregation_value':
+	      case 'cpuidle':
 		meter.units = 'jiffies';
 		break;
-	      case 'memory_value':
+	      case 'memfree':
 	        var res = formatBytes(meter.value, 2).split(' ');
 	        meter.value = res[0];
 	        meter.unit = res[1];
 		break;
-	      case 'df_value':
+	      case 'fsfree':
 		var res = formatBytes(meter.value, 2).split(' ');
 		meter.value = res[0];
 		meter.unit = res[1];
@@ -195,7 +223,7 @@ server.route({
       }
     },
     handler: function(request, reply) {
-      readLastMeasurement(request.params.host, 'memory_value', 'free')
+      readLastMeasurement(request.params.host, 'memfree')
 	.then(function(result) {
 	  reply(result);
 	})
@@ -218,8 +246,7 @@ server.route({
       }
     },
     handler: function(request, reply) {
-      readLastMeasurement(request.params.host, 'aggregation_value',
-		      'idle', 'cpu')
+      readLastMeasurement(request.params.host, 'cpuidle')
 	.then(function(result) {
 	  reply(result);
 	})
@@ -253,8 +280,7 @@ server.route({
       }
     },
     handler: function(request, reply) {
-      readLastMeasurement(request.params.host, 'df_value', 'free',
-	undefined, 'root')
+      readLastMeasurement(request.params.host, 'fsfree')
 	.then(function(result) {
 	  reply(result);
 	})
