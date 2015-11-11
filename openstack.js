@@ -22,9 +22,7 @@ var winston = require('winston');
 
 moment().format();
 
-var openStack = exports;
-
-openStack.getToken = function() {
+var getToken = function() {
 
   var identityHost     = config.get('identity.host');
   var identityPort     = config.get('identity.port');
@@ -59,7 +57,7 @@ openStack.getToken = function() {
   return rp(options);
 };
 
-openStack.getMeasurement = function(tokenId, measurementType) {
+var getMeasurement = function(tokenId, measurementType) {
 
   var ceilometerHostname = config.get('ceilometer.host');
   var ceilometerPort = config.get('ceilometer.port');
@@ -96,3 +94,6 @@ openStack.getMeasurement = function(tokenId, measurementType) {
 
   return rp(options);
 };
+
+exports.getToken       = getToken;
+exports.getMeasurement = getMeasurement;

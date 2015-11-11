@@ -39,13 +39,11 @@ winston.log('info', 'T-NOVA VIM monitoring system');
 // TODO Do not issue new token if the previous one is not expired
 
 var openStack      = require('./openstack.js');
-var getToken       = openStack.getToken;
-var getMeasurement = openStack.getMeasurement;
 
 getMeasurements = function() {
-  getToken()
+  openStack.getToken()
     .then(function(token) {
-      getMeasurement(token.id, 'cpu_util');
+      openStack.getMeasurement(token.id, 'cpu_util');
     })
     .catch(function(data) {
       winston.log('error', 'Error getting a new token.');
