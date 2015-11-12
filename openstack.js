@@ -95,5 +95,33 @@ var getMeasurement = function(tokenId, measurementType) {
   return rp(options);
 };
 
-exports.getToken       = getToken;
-exports.getMeasurement = getMeasurement;
+var getActiveInstances = function(tokenId, tenantId) {
+
+  var novaHost  = config.get('nova.host');
+  var novaPort  = config.get('nova.port');
+
+  var options = {
+    uri: 'http://' + novaHost + ':' + novaPort + '/v2/' + tenantId +
+      '/servers?all_tenants=1',
+    method: 'GET',
+    simple: true,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Auth-Token': tokenId
+    }
+  };
+
+  options.transform = function(data) {
+    return JSON.parse(data).servers.map(function(instance) {
+      var rObj = instance;
+      delete rObj.links;
+      return rObj;
+    });
+  };
+
+  return rp(options);
+};
+
+exports.getToken           = getToken;
+exports.getActiveInstances = getActiveInstances;
+exports.getMeasurement     = getMeasurement;
