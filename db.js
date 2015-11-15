@@ -142,5 +142,17 @@ var readLastMeasurement = function(host, measurementType) {
   });
 };
 
-exports.writeMeasurement    = writeMeasurement;
-exports.readLastMeasurement = readLastMeasurement;
+var readLastMeasurementWithType = function(host, measurementType) {
+  return new Promise(function(resolve, reject) {
+    readLastMeasurement(host, measurementType)
+      .then(function(result) {
+        var measurement = result;
+        measurement.type = measurementType;
+        resolve(measurement);
+      });
+  });
+};
+
+exports.writeMeasurement            = writeMeasurement;
+exports.readLastMeasurement         = readLastMeasurement;
+exports.readLastMeasurementWithType = readLastMeasurementWithType;
