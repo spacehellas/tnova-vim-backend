@@ -17,9 +17,7 @@
 
 var winston  = require('winston');
 var Hapi     = require('hapi');
-var Joi      = require('joi');
 var http     = require('http');
-var CronJob  = require('cron').CronJob;
 
 // Configuration variables
 var config       = require('config');
@@ -93,110 +91,10 @@ server.register([
   }
 });
 
-server.route({
-  path: '/',
-  method: 'GET',
-  handler: function(request, reply) {
-    reply.redirect('/docs');
-  }
-});
+var Routes = require('./lib/routes.js');
 
-var db = require('./db.js');
-
-server.route({
-  method: 'GET',
-  path: '/api/measurements/{host}.memfree',
-  config: {
-    tags: ['api'],
-    description: 'Get the latest value of free memory on a specific host',
-    validate: {
-      params: {
-        host: Joi.string().required().description('host name')
-      }
-    },
-    handler: function(request, reply) {
-      db.readLastMeasurement(request.params.host, 'memfree')
-	.then(function(result) {
-	  reply(result);
-	})
-        .catch(function(reason) {
-	  reply(reason.message).code(404);
-	});
-    }
-  }
-});
-
-server.route({
-  method: 'GET',
-  path: '/api/measurements/{host}.cpuidle',
-  config: {
-    tags: ['api'],
-    description: 'Get the latest value of idle CPU usage on a specific host',
-    validate: {
-      params: {
-        host: Joi.string().required().description('host name')
-      }
-    },
-    handler: function(request, reply) {
-      db.readLastMeasurement(request.params.host, 'cpuidle')
-	.then(function(result) {
-	  reply(result);
-	})
-	.catch(function(reason) {
-	  reply(reason.message).code(404);
-	});
-    }
-  }
-});
-
-server.route({
-  method: 'GET',
-  path: '/api/measurements/{host}.fsfree',
-  config: {
-    tags: ['api'],
-    description: 'Get the latest root filesystem status on a specific host',
-    validate: {
-      params: {
-        host: Joi.string().required().description('host name')
-      }
-    },
-    handler: function(request, reply) {
-      db.readLastMeasurement(request.params.host, 'fsfree')
-	.then(function(result) {
-	  reply(result);
-	})
-        .catch(function(reason) {
-	  reply(reason.message).code(404);
-	});
-    }
-  }
-});
-
-server.route({
-  method: 'POST',
-  path: '/api/subscribe',
-  config: {
-    tags: ['api'],
-    description: 'Subscribe to meter events',
-    validate: {
-      payload: Joi.object().keys({
-        meters: Joi.array().items(Joi.string().required()).
-          description('array of meter types'),
-        instances: Joi.array().items(Joi.string().required()).
-          description('array of instances'),
-        interval: Joi.number().integer().required().
-          description('interval in minutes'),
-        callbackUrl: Joi.string().uri().required().
-          description('callback URL')
-      })
-    },
-    handler: function(request, reply) {
-      reply('Your request has been registered successfully. ' +
-        'Information shall be send every ' +
-        request.payload.interval + ' minutes');
-    }
-  }
-});
+// add routes
+server.route(Routes.routes);
 
 server.start(function() {
   winston.log('info', 'Server running at: ' + server.info.uri);
