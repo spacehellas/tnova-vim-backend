@@ -22,10 +22,5 @@
     "tenantName": "tenant",
     "username": "username",
     "password": "pass"
-  },
-  "monitoring": {
-    "instanceIds":[
-      "27ad39af-0267-4f81-bdc6-deda0d64c9ac"
-    ]
   }
 }
