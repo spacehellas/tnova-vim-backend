@@ -29,27 +29,12 @@ if (typeof dbPortTemp === 'string' || dbPortTemp instanceof String) {
 } else {
   var dbPort = dbPortTemp;
 }
-var pollingInterval = config.get('ceilometer.pollingInterval');
 
 winston.level = loggingLevel;
 winston.log('info', 'T-NOVA VIM monitoring system');
 
-// TODO Do not issue new token if the previous one is not expired
-
-var openStack      = require('./lib/openstack.js');
-
-getMeasurements = function() {
-  openStack.getToken()
-    .then(function(token) {
-      openStack.getMeasurement(token.id, 'cpu_util');
-    })
-    .catch(function(data) {
-      winston.log('error', 'Error getting a new token.');
-    });
-  setTimeout(getMeasurements, pollingInterval);
-};
-
-getMeasurements();
+var openstack = require('./lib/openstack.js');
+openstack.getMeasurements();
 
 var server = new Hapi.Server();
 server.connection({
