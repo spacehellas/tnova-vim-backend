@@ -12,6 +12,17 @@ tsdb:
     - /srv/docker/tnova_vim/tsdb:/data
 tnova-monitoring:
   image: tnova/vim-backend:latest
+  environment:
+    - LOGGING_LEVEL=info
+    - CEILOMETER_HOST=localhost
+    - CEILOMETER_PORT=8777
+    - NOVA_HOST=localhost
+    - NOVA_PORT=8774
+    - IDENTITY_HOST=localhost
+    - IDENTITY_PORT=5000
+    - IDENTITY_TENANT=tenant
+    - IDENTITY_USERNAME=username
+    - IDENTITY_PASSWORD=pass
   links:
     - tsdb:influxdb
   ports:
