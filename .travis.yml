@@ -1,3 +1,9 @@
+branches:
+  only:
+    - master
+
+sudo: required
+
 services:
   - docker
 
@@ -8,13 +14,12 @@ node_js:
 
 env:
   global:
-    - secure: "u4TOssE/YiaWlohGQPtOKJEiSpcLX/Lm6d2NKjm+S9rch4XmSazgD/7RWqbH06NieXDIO2hkMBCzh31BZi2co5bDTrJwWK5FOt60lvSg27cap7Tp48wORTxqHYmyzW/xB6RZg7GFplrTC4+rxGZCx21KDXQ5IfGaz1680AkvO6KBGjBmdbl6mbGfinmhhryOiozG3+1okBZG8cLdFQwNaPOkrzHPCj0wd1pxqqO4StYkMSCBlSdHo1A4CvpuytWGlzyqzDXYpFI5T/h2bNoIjLf8UdBLfYHhahpW2RTiEL68EjPpSbGxcSu68lSIl7mB5bg5bXx79z2q5+94UxHubGZeCp2BvajD8uEc2qR4uuFbzj7CEwVKpsV+UYuPobHR3D7djlOZsbYngjy3Pm9FOMaFwDyc2sedMzPBFeeGdoeHWV5yzAzMSfUWyW0Kn7M2NnTDObroJ1fZ9QeaNrsHozSAgLtlH2U00zGhQ5h2h840Wg1/oAvcsuxTT0dCNQDSKwPyUhxA+YGmDEpgox+tQ4MBZ+WDVVK24BFA1s1RTjBeFobzqR0npWhD8eSpKMjwuC1uEKXOUKm8q6URYpcylERtU5ZCWBeDU+Ytl8nYIGrBSOz9kfz5+Yf18O+aWV7dyhLVRdh4yLy4+pXxXSf2UWzR2NId8bqiUyYf06gyCw0=" # DOCKER_EMAIL
-    - secure: "K2XSGZh1NSTl1g0x9fcI6hZWAN0Z5CPgqRaIBxvcHaB0LuPZ9Qy1AmhcIbRPALjwhhZfy8vJ58NqaPJbz3zq0nMoNl33ySXh+44rB+DQRRDC2NDjFdiKF0cPUCwSYlufBkjbK3N50axhbY6iDV5tFh+rDJJa4KlT61vwB6N5FNrygWw9qbAgCFG36/fZA/hpC6I+KBtvKfDk7jPBgMI05mMKmb+B32x3roX1WOoTcwqVrUlhuT58x685QDdCJn4CFkSZOFrAqcDM7JQ8KWrEi+CgkLsCuTdEebg1yqjb/v+gg+0FzAwvXH10xpjmlL8rIGo+AUvYd+J8MDXG/McKltglhhylj2wVyw/yDkMZqAWxOEHTjtBpmgbMW2nJnDwobsLkeeNsl/sa2xV4PYZXwPRlRSCXH7AHk6jim6ssqBV+L3educYPgmj11PIUgRW4+ycXvMTPwYy+H3+ZobXzCKN/MI0SRPFhZAEmf/KRzC0mYPjOMBPpnYFQ2zOE7H3Z9MSCdwQrwO6tgHvGTMIiFimOZImPGhe8nliCyut6Exb3KM/0BkguW3dQuarjLvtMIJvWCSXMaXDiQ3FEDXZtKc1vbP2USxf8VRTBCLRV+x740Ws4gs2MwCAdFajDJTL4h5Ub+VUUKp7v4PvT//dvYnyQ8pZiVZ+pCFIaO0l9eKw=" # DOCKER_USER
-    - secure: "rVXTlG85qwNsvtZYkZTrRiIiczYuxCXitoanAxpGjxOTG0m1JHFPUnG8uYKm+srBInJ9J5M27nb+UVQvBJWLmADuSig6J9PARaoPrU7nWsrQsRlsMLK3n0OMmXY9depst8SwSExoZS/9k2GYFFIj0f1SSVoj7JK/SbPX6v6ya53rszGdQYwGy2h7PVDG6x1GjvDuA8fHGKHIIgt1Kaq6TvZ00kfmlu66+9aYXF+KD+eve3n7dd9C5/h1+7KlvLEahiksOy4TzveNJ2FawISpTcEOzYdHz9V5spzcb5l9vfxW9h1vnZyQ4iBBB16E71muPjARO+tpd/V6Hp/cpricW5E2X+Mlb9GGJYwyiCWgFXsV3eCSWxScB56k1wEoA+VX+uyg42EbAAAY9UWAXNMHbjXsV5I8YbrDAUHUKiaZqAJ2d/KM1D/jFSA8tKdslVVkCEhHF1LYMBemcGq85cZgbdefG3RcJNoCWiCr3o3l1EzuiV1K2pvtApYju1ol5PSBrhy7FeAvhCfvEkHjqawlw06zlJuk0y2W9ps3dCNlu81H5I7SdXS2sky/uljN7FLhUOy1XTsR+Ol8iSKyCEDdfZVLIIt7m5gu6otLPGNmefB7KIIdGyvTtDnHF78pXFHbvLCInXwipa2Gmt8TSqiMDwaO/WDRWXEEPNqigpyPJ28=" # DOCKER_PASS
     - COMMIT=${TRAVIS_COMMIT::8}
 
-after_success:
-  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+before_install:
+  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+
+script:
   - export REPO=spacehellas/tnova-vim-backend
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
   - docker build -f Dockerfile -t $REPO:$COMMIT .
