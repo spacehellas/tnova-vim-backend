@@ -294,6 +294,16 @@ v3.0](https://github.com/spacehellas/tnova-vim-backend/blob/master/LICENSE.txt).
 People and organisations are welcome to download and do pull requests on the
 public [GitHub repository](https://github.com/spacehellas/tnova-vim-backend).
 
+The software follows the [Semantic Versioning Scheme](http://semver.org/),
+which is defined in short as follows:
+
+Given a version number MAJOR.MINOR.PATCH, increment the:
+
+* MAJOR version when you make incompatible API changes,
+* MINOR version when you add functionality in a backwards-compatible manner,
+  and
+* PATCH version when you make backwards-compatible bug fixes.
+
 A Docker image containing node and the application is also provided inside this
 repository. We have opted out creating an npm module, since the VIM monitoring
 project is not strongly related with other JavaScript projects. A Docker image
