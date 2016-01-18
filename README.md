@@ -57,3 +57,7 @@ docker run --name=tnova-vim-backend -d \
     --publish 8080:3000 \
     tnova/vim-backend:latest
 ```
+
+## More information
+
+* [Deploying T-NOVA VIM Monitoring Back-End](documentation/deploying.md)
