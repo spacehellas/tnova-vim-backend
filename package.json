@@ -10,10 +10,12 @@
     "hapi": "^10.0.0",
     "hapi-swaggered": "^2.4.0",
     "hapi-swaggered-ui": "^2.1.0",
+    "inert": "^3.2.0",
     "influent": "^0.4.0",
     "joi": "^6.9.1",
     "moment": "^2.10.3",
     "request-promise": "^0.4.3",
+    "vision": "^4.0.1",
     "winston": "^1.0.1"
   }
 }
