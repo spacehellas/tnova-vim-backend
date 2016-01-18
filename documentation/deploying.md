@@ -123,6 +123,30 @@ For a more complete collectd configuration file, please refer to [the
 recommended collectd configuration
 template](../contrib/collectd.conf.template).
 
+## How the Back-End is dockerised
+
+[The official Docker
+image](https://hub.docker.com/r/spacehellas/tnova-vim-backend/)
+is based on [a minimal Node.js Docker
+image](https://github.com/mhart/alpine-node).  It was selected due to its small
+size: it does not exceed 40 MB. This image is built on [Alpine
+Linux](https://alpinelinux.org/) and contains additionaly just the node as a
+static binary with no npm.
+
+As such, it is required to run `npm install` locally *before* running `docker
+build`, so that Docker just copies all the necessary files and the image will
+not need `npm` installed in.
+
+### Building the Docker image
+
+Having ensured that `docker` and `npm` are working, run the following commands
+in the project's root directory:
+
+``` command-line
+npm install
+docker build --tag=spacehellas/tnova-vim-backend .
+```
+
 [^1]: O'Gara, Maureen (26 July 2013). "[Ben Golub, Who Sold Gluster to Red Hat,
 Now Running dotCloud](http://maureenogara.sys-con.com/node/2747331)". SYS-CON
 Media. Retrieved 2016-01-15.
