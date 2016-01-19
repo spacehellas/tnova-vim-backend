@@ -25,3 +25,10 @@ script:
   - docker build -f Dockerfile -t $REPO:$COMMIT .
   - docker tag $REPO:$COMMIT $REPO:$TAG
   - docker push $REPO:$TAG
+
+notifications:
+  webhooks:
+    urls:
+      secure: OoFn4suodKZv9pH4m6gdM4iNcbfKNUrcOK0ZJSEMeAPxqayQ9UuAtKOpr4zQHyEBwTqbqt4X62Yk2i2dDEWfcLnRHrOeb0TtmbqsOIJoTJSBgBPp0c3kaztektNwtWK4yzZei26nwZEZSlSqlka2R3hCjh6v/14CYHe9lM7Pbbw2gZjGRwSe53keX1vEwABuEl628M7dp2+jtbZlo6AOw20s3oxah5skxtWcBANAgn9xkOV61c3PAKHXC7W5BZJ2NDMgy9LRg6LGDOSMWOBQQx7nkOTp4XSZaagxurn93iPflvW3aDSnsiFDij6qHchbFN2OwnwKQL/TmtKKiY0+oRmNGMUjGotrJxrZA0HCyULbUYKlNNHt1jLJa0qw5asc5gIml9GDMBF+3WePZ947jeH504j2vWR2hWkVVyM6nMzSGar6FycRotKsPNqZYugNI4VvBmv8uMmz/NrFzKT99iW2miW/tVkgKCtxfnr32qRnvFYH1vtIv4HDrBvoTLd1nCShvVm3/xBpHSP8/71hU2BfrHNnXtoh4SLf9vIpSDFkveZqR1Vmvb1WZhAwYFdP+NUglJisH5eUmS1Q/EFoe52iKVmfXALGtaKOJiYxxJbj4XWeWIQ/TdIWw1f94tP51vF38JG8ixYzhcWaDG2NV9hD/yO+BiWRzeCvHayTOfg=
+    on_success: always
+    on_failure: never
