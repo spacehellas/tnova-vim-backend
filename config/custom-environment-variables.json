@@ -5,6 +5,7 @@
     "port": "INFLUXDB_PORT_8086_TCP_PORT"
   },
   "ceilometer": {
+    "pollingInterval": "POLLING_INTERVAL",
     "host": "CEILOMETER_HOST",
     "port": "CEILOMETER_PORT"
   },

@@ -53,6 +53,7 @@ Run the following command:
 ``` command-line
 docker run --name monitoring_backend -d --restart=always \
     --env 'CEILOMETER_HOST=localhost' --env 'CEILOMETER_PORT=8777' \
+    --env 'POLLING_INTERVAL=600000' \
     --env 'NOVA_HOST=localhost' --env 'NOVA_PORT=8774' \
     --env 'IDENTITY_HOST=localhost' --env 'IDENTITY_PORT=5000' \
     --env 'IDENTITY_TENANT=tenant' \
@@ -83,6 +84,7 @@ Name | Description
 -----|------------|
 **CEILOMETER_HOST** | Defines the host of the OpenStack Ceilometer service
 **CEILOMETER_PORT** | Defines the port of the OpenStack Ceilometer service
+**POLLING_INTERVAL** | Defines the polling interval to the OpenStack Ceilometer service (in millisecconds)
 **NOVA_HOST** | Defines the host of the OpenStack Nova service
 **NOVA_PORT** | Defines the port of the OpenStack Nova service
 **IDENTITY_HOST** | Defines the host of the OpenStack Identity (Keystone) service
