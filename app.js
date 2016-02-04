@@ -55,7 +55,7 @@ server.register([
         title: 'T-NOVA VIM Monitoring API',
         description: 'Powered by node, hapi, joi, hapi-swaggered,' +
           'hapi-swaggered-ui and swagger-ui',
-        version: '0.1.1'
+        version: '0.1.2'
       }
     }
   },

@@ -2,9 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [unreleased]
+## [0.1.2] - 2016-02-04
 ### Added
 - Dependency status at README via David.
+
+### Changed
+- Update bluebird, config, cron, hapi-swaggered, hapi-swaggered-ui, joi,
+  request-promise and winston.
 
 ### Security
 - Update hapi from v10.0.0.
