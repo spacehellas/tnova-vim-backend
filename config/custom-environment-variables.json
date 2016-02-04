@@ -16,7 +16,7 @@
   "identity": {
     "host": "IDENTITY_HOST",
     "port": "IDENTITY_PORT",
-    "tenant": "IDENTITY_TENANT",
+    "tenantName": "IDENTITY_TENANT",
     "username": "IDENTITY_USERNAME",
     "password": "IDENTITY_PASSWORD"
   }
