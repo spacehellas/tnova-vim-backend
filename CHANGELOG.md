@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+### Added
+- Dependency status at README via David.
 
 ### Security
 - Update hapi from v10.0.0.

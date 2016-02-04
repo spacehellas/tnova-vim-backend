@@ -1,6 +1,6 @@
 # T-NOVA VIM Monitoring Back-End
 
-[![Build Status](https://travis-ci.org/spacehellas/tnova-vim-backend.svg?branch=master)](https://travis-ci.org/spacehellas/tnova-vim-backend)
+[![Build Status](https://travis-ci.org/spacehellas/tnova-vim-backend.svg?branch=master)](https://travis-ci.org/spacehellas/tnova-vim-backend) [![Dependency Status](https://david-dm.org/spacehellas/tnova-vim-backend.svg?theme=shields.io)](https://david-dm.org/spacehellas/tnova-vim-backend)
 
 The monitoring back-end of [T-NOVA](http://www.t-nova.eu/)'s Virtual
 Infrastructure Manager (VIM).
