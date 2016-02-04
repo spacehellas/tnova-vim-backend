@@ -4,7 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
-### Changed
+### Security
+- Update hapi from v10.0.0.
+- Update moment from v2.10.3.
 - Update node-alpine Docker image to v4.2.6.
 
 ## [0.1.1] - 2016-02-04
