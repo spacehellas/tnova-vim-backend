@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [unreleased]
+
+### Changed
+- Update node-alpine Docker image to v4.2.6.
+
 ## [0.1.1] - 2016-02-04
 
 **Due to a schema change it is obligatory to DROP the statsdb database.**
