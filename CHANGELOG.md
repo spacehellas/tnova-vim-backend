@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.3] - 2016-02-26
+
+### Security
+- Update node-alpine Docker image to v4.3.1.
+
 ## [0.1.2] - 2016-02-04
 ### Added
 - Dependency status at README via David.

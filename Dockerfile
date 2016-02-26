@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:base-4.2.6
+FROM mhart/alpine-node:base-4.3.1
 MAINTAINER ioannis.koutras@gmail.com
 
 ADD . .
