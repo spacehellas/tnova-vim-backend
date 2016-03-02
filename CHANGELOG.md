@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [unreleased]
+### Fixed
+- Use proper field name for tenant name in environment variables.
+- Reject the whole promise on OpenStack measurement retrieval error.
+
 ## [0.1.3] - 2016-02-26
 
 ### Security
