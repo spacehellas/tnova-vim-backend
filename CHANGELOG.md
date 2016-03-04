@@ -2,8 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [unreleased]
+## [0.1.4] - 2016-03-04
+
+### Added
+- Support for Proxy- and SBC-specific metrics.
+
 ### Fixed
+- Do not reject valid measurements if some others are not fulfilled.
 - Use proper field name for tenant name in environment variables.
 - Reject the whole promise on OpenStack measurement retrieval error.
 
