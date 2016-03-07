@@ -62,6 +62,7 @@ server.register([
         'measurement/generic': 'Demo of generic measurements',
         'measurement/proxy': 'Demo of vProxy-specific measurements',
         'measurement/sbc': 'Demo of vSBC-specific measurements',
+        'measurement/tc': 'Demo of vTC-specific measurements',
         'subscription': 'Manage subscriptions'
       }
     }
