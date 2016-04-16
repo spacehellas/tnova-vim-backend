@@ -36,6 +36,9 @@ winston.log('info', 'T-NOVA VIM monitoring system');
 var openstack = require('./lib/openstack.js');
 openstack.getMeasurements();
 
+const alrm = require('./lib/alarms.js');
+alrm.checkAlarms();
+
 var server = new Hapi.Server();
 server.connection({
   port: 3000,

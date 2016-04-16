@@ -22,5 +22,8 @@
     "tenantName": "tenant",
     "username": "username",
     "password": "pass"
+  },
+  "alarms": {
+    "pollingInterval": 10000
   }
 }

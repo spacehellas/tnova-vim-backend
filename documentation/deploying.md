@@ -58,6 +58,7 @@ docker run --name monitoring_backend -d --restart=always \
     --env 'IDENTITY_HOST=localhost' --env 'IDENTITY_PORT=5000' \
     --env 'IDENTITY_TENANT=tenant' \
     --env 'IDENTITY_USERNAME=username' --env 'IDENTITY_PASSWORD=pass' \
+    --env 'ALARM_POLLING_INTERVAL=10000' \
     --link influxdb:influxdb \
     --publish 8080:3000 \
     spacehellas/tnova-vim-backend:latest
@@ -92,6 +93,7 @@ Name | Description
 **IDENTITY_TENANT** | Defines the OpenStack tenant's name
 **IDENTITY_USERNAME** | Defines the OpenStack username
 **IDENTITY_PASSWORD** | Defines the OpenStack password
+**ALARM_POLLING_INTERVAL** | Defines the polling interval for alarm triggering (in milliseconds)
 
 ### Grafana (optional)
 

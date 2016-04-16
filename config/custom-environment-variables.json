@@ -19,5 +19,8 @@
     "tenantName": "IDENTITY_TENANT",
     "username": "IDENTITY_USERNAME",
     "password": "IDENTITY_PASSWORD"
+  },
+  "alarms": {
+    "pollingInterval": "ALARM_POLLING_INTERVAL"
   }
 }
