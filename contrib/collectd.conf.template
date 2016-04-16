@@ -7,6 +7,7 @@ LoadPlugin syslog
 LoadPlugin aggregation
 LoadPlugin cpu
 LoadPlugin df
+LoadPlugin interface
 LoadPlugin load
 LoadPlugin memory
 LoadPlugin network
