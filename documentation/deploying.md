@@ -84,7 +84,7 @@ Name | Description
 -----|------------|
 **CEILOMETER_HOST** | Defines the host of the OpenStack Ceilometer service
 **CEILOMETER_PORT** | Defines the port of the OpenStack Ceilometer service
-**POLLING_INTERVAL** | Defines the polling interval to the OpenStack Ceilometer service (in millisecconds)
+**POLLING_INTERVAL** | Defines the polling interval to the OpenStack Ceilometer service (in milliseconds)
 **NOVA_HOST** | Defines the host of the OpenStack Nova service
 **NOVA_PORT** | Defines the port of the OpenStack Nova service
 **IDENTITY_HOST** | Defines the host of the OpenStack Identity (Keystone) service
@@ -132,7 +132,7 @@ image](https://hub.docker.com/r/spacehellas/tnova-vim-backend/)
 is based on [a minimal Node.js Docker
 image](https://github.com/mhart/alpine-node).  It was selected due to its small
 size: it does not exceed 40 MB. This image is built on [Alpine
-Linux](https://alpinelinux.org/) and contains additionaly just the node as a
+Linux](https://alpinelinux.org/) and contains additionally just the node as a
 static binary with no npm.
 
 As such, it is required to run `npm install` locally *before* running `docker
