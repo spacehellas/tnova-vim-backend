@@ -183,8 +183,7 @@ instance.
 
 ### Interfaces to cloud and network controllers
 
-An interface connecting OpenStack with the VIM monitoring backend has been
-fully developed. Another one is planned soon for the OpenDaylight.
+#### OpenStack interface
 
 The current version of the OpenStack connector has the following workflow:
 
@@ -205,6 +204,21 @@ The current version of the OpenStack connector has the following workflow:
 
 This workflow is being performed with a time period that can be set with the
 *pollingInterval* parameter as aforementioned.
+
+### OpenDayLight interface
+
+The backend uses the available REST API of OpenDayLight to receive respective
+statistics. Each REST API request is encapsulated with an Authorisation Header,
+which contains a username and password with sufficient privileges. Information
+of every network device is periodically requested and stored to the time-series
+database, so that users can later access them through the monitoring API.
+
+The statistics that are currently requested and stored are the following:
+
+* **Port Statistics**: rx packet count, tx packet count, rx byte count,
+  tx byte count, rx drop count, tx drop count.
+* **Table Statistics**: active count, lookup count, matched count,
+  maximum supported entries.
 
 ### Northbound API to Orchestrator
 
