@@ -6,9 +6,9 @@ The overall architecture of the T-NOVA VIM monitoring framework can be defined
 by taking into account the technical requirements, as well as the technical
 choices made for the NFVI and VIM infrastructure. The specification phase has
 concluded that the OpenStack platform will be used for the control of the
-virtualised IT infrastructure, as well as the OpenDaylight controller for the
+virtualised IT infrastructure, as well as the OpenDayLight controller for the
 management of the SDN network elements. In this context, it is proper to
-leverage the OpenDaylight (Statistics API) and OpenStack (Telemetry API)
+leverage the OpenDayLight (Statistics API) and OpenStack (Telemetry API)
 capabilities for collecting metrics, rather than directly polling the network
 elements and the hypervisors at NFVI layer, respectively.
 
@@ -24,7 +24,7 @@ level to collect, consolidate, process metrics and communicate them to the
 Orchestrator. We call this entity VIM Monitoring Manager (VIM MM), as a
 stand-alone software component.
 
-OpenStack and OpenDaylight already provide a rich set of metrics for both
+OpenStack and OpenDayLight already provide a rich set of metrics for both
 physical and virtual nodes, which should be sufficient for most T-NOVA
 requirements. However, in order to gain a more detailed insight on the VNF
 status and operation, it would be advisable to be able to connect a rich set of
@@ -53,7 +53,7 @@ and the type of queries the monitoring backend will have to make, a time-series
 database is required.
 
 Metrics collection is being performed in three different ways: (a) The backend
-aggregates metrics by polling the cloud (OpenStack) and network (OpenDaylight)
+aggregates metrics by polling the cloud (OpenStack) and network (OpenDayLight)
 controllers and stores them to the database, (b) VNF MAs upload generic metrics
 directly to the time-series database and (c) VNF-specific applications upload
 directly measurements to the time-series database.
