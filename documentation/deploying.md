@@ -59,6 +59,7 @@ docker run --name monitoring_backend -d --restart=always \
     --env 'IDENTITY_TENANT=tenant' \
     --env 'IDENTITY_USERNAME=username' --env 'IDENTITY_PASSWORD=pass' \
     --env 'ALARM_POLLING_INTERVAL=10000' \
+    --volume /srv/docker/tnova_vim/subscriptions.json:/subscriptions.json \
     --link influxdb:influxdb \
     --publish 8080:3000 \
     spacehellas/tnova-vim-backend:latest
@@ -73,6 +74,9 @@ The `docker run` command above had the following options:
   start, in case the host restarts.
 * `--env` options: The environment variables are explained in the [next
   section](#environment-variables).
+* `--volume` option: The only data volume is used here to persist the
+  `/subscriptions.json` file, so that subscriptions are not lost between
+  restarts.
 * `--link influxdb:influxdb`: This option links the back-end container with the
   InfluxDB one. Docker bridges this way the two containers automatically and
   the back-end container can detect which ports InfluxDB listens to.
