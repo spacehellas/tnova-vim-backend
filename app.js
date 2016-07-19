@@ -36,6 +36,9 @@ winston.log('info', 'T-NOVA VIM monitoring system');
 var openstack = require('./lib/openstack.js');
 openstack.getMeasurements();
 
+const subscr = require('./lib/subscription.js');
+subscr.restoreSubscriptions();
+
 const alrm = require('./lib/alarms.js');
 alrm.checkAlarms();
 
