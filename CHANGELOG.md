@@ -2,6 +2,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.0] - 2016-07-20
+
+### Added
+- Expose vTC-specific measurements.
+- Support for alarm triggers.
+- Make subscriptions persistent.
+- Option to disable OpenStack polling.
+
+### Changed
+- Calculate network usage from collectd.
+- Calculate CPU utilisation from collectd.
+
+### Fixed
+- Show proper timestamp on single measurements.
+- In case some of the measurements fail to collected, send the rest of them.
+
+### Security
+- Update node-alpine Docker image to v4.4.7.
+
 ## [0.1.4] - 2016-03-04
 
 ### Added
