@@ -8,6 +8,7 @@
     "name": "statsdb"
   },
   "ceilometer": {
+    "enabled": true,
     "pollingInterval": 10000,
     "host": "localhost",
     "port": 8777

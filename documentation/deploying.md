@@ -52,6 +52,7 @@ Run the following command:
 
 ``` command-line
 docker run --name monitoring_backend -d --restart=always \
+    --env 'CEILOMETER_ENABLED=true' \
     --env 'CEILOMETER_HOST=localhost' --env 'CEILOMETER_PORT=8777' \
     --env 'POLLING_INTERVAL=600000' \
     --env 'NOVA_HOST=localhost' --env 'NOVA_PORT=8774' \
@@ -87,6 +88,7 @@ The `docker run` command above had the following options:
 
 Name | Description
 -----|------------|
+**CEILOMETER_ENABLED** | Defines if the monitoring backend polls the OpenStack Ceilometer service (default: true)
 **CEILOMETER_HOST** | Defines the host of the OpenStack Ceilometer service
 **CEILOMETER_PORT** | Defines the port of the OpenStack Ceilometer service
 **POLLING_INTERVAL** | Defines the polling interval to the OpenStack Ceilometer service (in milliseconds)

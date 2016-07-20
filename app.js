@@ -33,8 +33,12 @@ if (typeof dbPortTemp === 'string' || dbPortTemp instanceof String) {
 winston.level = loggingLevel;
 winston.log('info', 'T-NOVA VIM monitoring system');
 
-var openstack = require('./lib/openstack.js');
-openstack.getMeasurements();
+const isCeilometerEnabled = config.get('ceilometer.enabled');
+if (isCeilometerEnabled) {
+  const openstack = require('./lib/openstack.js');
+  winston.log('info', 'Polling Ceilometer is enabled.');
+  openstack.getMeasurements();
+}
 
 const subscr = require('./lib/subscription.js');
 subscr.restoreSubscriptions();
