@@ -16,7 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Show proper timestamp on single measurements.
-- In case some of the measurements fail to collected, send the rest of them.
+- In case some of the measurements fail to get collected, send the rest of them.
 
 ### Security
 - Update node-alpine Docker image to v4.4.7.
