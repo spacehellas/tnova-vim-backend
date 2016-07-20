@@ -11,7 +11,7 @@ services:
 language: node_js
 
 node_js:
-  - "4.3"
+  - "4.4"
 
 env:
   - DOCKER_IMAGE_NAME=spacehellas/tnova-vim-backend
