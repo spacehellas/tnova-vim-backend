@@ -11,7 +11,7 @@
     "hapi-swaggered": "^2.6.0",
     "hapi-swaggered-ui": "^2.3.1",
     "inert": "^3.2.0",
-    "influent": "^0.4.0",
+    "influent": "^0.5.2",
     "joi": "^7.2.3",
     "lodash": "^4.13.1",
     "lowdb": "^0.13.1",
