@@ -1,0 +1,110 @@
+---
+- name: Update APT and Install pip, docker.io
+  apt: pkg={{item}} update_cache=yes
+  with_items:
+  - python-pip
+  - docker.io
+  become: yes
+  become_method: sudo
+  tags: dependencies_setup
+
+#- name: Install Docker
+#  shell: curl -sSL https://get.docker.com/ | sh
+
+- name: Docker-PY
+  pip:
+    name: "{{ item }}"
+  with_items:
+  - docker-py
+  become: yes
+  become_method: sudo
+  tags: dependencies_setup
+
+#- name: InfluxDB Docker container
+#  docker:
+#    docker_api_version: "{{ DOCKER.API_VERSION }}"
+#    net: bridge
+#    publish_all_ports: yes
+#    name: "{{ INFLUX.NAME }}"
+#    restart_policy: always
+#    env:
+#      PRE_CREATE_DB: "{{ INFLUX.PRE_CREATE_DB }}"
+#      COLLECTD_DB: "{{ INFLUX.COLLECTD_DB }}"
+#      COLLECTD_BINDING: "{{ INFLUX.COLLECTD_BINDING }}"
+#    volumes: "{{ INFLUX.VOLUMES }}"
+#    ports: "{{ INFLUX.PORTS }}"
+#    image: "{{ INFLUX.IMAGE }}"
+#    state: reloaded
+#  become: yes
+#  become_method: sudo
+#  tags: influxdb_setup
+
+#- name: InfluxDB Docker container
+#  shell: docker run --name influxdb -d --restart=always \
+#    --env 'PRE_CREATE_DB=statsdb' \
+#    --env 'COLLECTD_DB=statsdb' --env 'COLLECTD_BINDING=:8096' \
+#    --volume /srv/docker/tnova_vim/tsdb:/data \
+#    --publish 8083:8083 --publish 8086:8086 --publish 8096:8096/udp \
+#    tutum/influxdb:0.9
+#  become: yes
+#  become_method: sudo
+
+
+- name: InfluxDB Docker container
+  shell: docker run --name {{ INFLUX.NAME }} -d --restart=always \
+    --env 'PRE_CREATE_DB={{ INFLUX.PRE_CREATE_DB }}' \
+    --env 'COLLECTD_DB={{ INFLUX.COLLECTD_DB }}' --env 'COLLECTD_BINDING={{ INFLUX.COLLECTD_BINDING }}' \
+    --volume {{ INFLUX.VOLUMES[0] }} \
+    --publish {{ INFLUX.PORTS[0] }} --publish {{ INFLUX.PORTS[1] }} --publish {{ INFLUX.PORTS[2] }} \
+    {{ INFLUX.IMAGE }}
+  become: yes
+  become_method: sudo
+
+- name: Create Monitoring Backend persistence json file
+  file:
+    path: /srv/docker/tnova_vim/subscriptions.json
+    state: touch
+#  shell: "touch /srv/docker/tnova_vim/subscriptions.json"
+  become: yes
+  become_method: sudo
+
+- name: Monitoring Backend Docker container
+  docker:
+    docker_api_version: "{{ DOCKER.API_VERSION }}"
+    publish_all_ports: yes
+    net: bridge
+    name: "{{ MON_BACKEND.NAME }}"
+    restart_policy: always
+    env:
+      CEILOMETER_HOST: "{{ MON_BACKEND.CEILOMETER_HOST }}"
+      CEILOMETER_PORT: "{{ MON_BACKEND.CEILOMETER_PORT }}"
+      POLLING_INTERVAL: "{{ MON_BACKEND.POLLING_INTERVAL }}"
+      NOVA_HOST: "{{ MON_BACKEND.NOVA_HOST }}"
+      NOVA_PORT: "{{ MON_BACKEND.NOVA_PORT }}"
+      IDENTITY_HOST: "{{ MON_BACKEND.IDENTITY_HOST }}"
+      IDENTITY_PORT: "{{ MON_BACKEND.IDENTITY_PORT }}"
+      IDENTITY_TENANT: "{{ MON_BACKEND.IDENTITY_TENANT }}"
+      IDENTITY_USERNAME: "{{ MON_BACKEND.IDENTITY_USERNAME }}"
+      IDENTITY_PASSWORD: "{{ MON_BACKEND.IDENTITY_PASSWORD }}"
+    volumes:  "{{ MON_BACKEND.VOLUMES }}"
+    ports: "{{ MON_BACKEND.PORTS }}"
+    links: "{{ MON_BACKEND.LINKS }}"
+    image: "{{ MON_BACKEND.IMAGE }}"
+    state: reloaded
+  become: yes
+  become_method: sudo
+  tags: ceilometer_setup
+
+- name: Grafana Docker container
+  docker:
+    docker_api_version: "{{ DOCKER.API_VERSION }}"
+    publish_all_ports: yes
+    net: bridge
+    name: "{{ GRAFANA.NAME }}"
+    restart_policy: always
+    ports: "{{ GRAFANA.PORTS }}"
+    image: "{{ GRAFANA.IMAGE }}"
+    state: reloaded
+  become: yes
+  become_method: sudo
+  tags: grafana_setup
