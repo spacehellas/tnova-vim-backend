@@ -6,6 +6,12 @@ Optionally, the playbook can be configured to provision an Openstack Virtual Mac
 
 ## How to run
 
+```sh
+ansible-playbook -i inventory site.yml
+```
+
+## How to choose Openstack VM provisioning
+
 In ansible_installation/site.yml make sure **"- include: openstack-vm-provision.yml"** is included and not commented out.
 ```yml
 - include: openstack-vm-provision.yml
@@ -19,12 +25,6 @@ In ansible_installation/inventory leave **[vm_group]** empty
 
 [vm_group]
 
-```
-
-## How to choose Openstack VM provisioning
-
-```sh
-ansible-playbook -i inventory site.yml 
 ```
 
 ## Files to edit
