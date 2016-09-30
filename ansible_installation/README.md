@@ -88,7 +88,7 @@ GRAFANA:
 ```
 
 **File 3. - Optional** ansible_installation/roles/openstack-vm-provision/vars/main.yml:
-```
+```yml
 # Openstack Identity URL
 OS_AUTH_URL: http://10.143.0.240:5000/v2.0
 # Openstack Username & Password
