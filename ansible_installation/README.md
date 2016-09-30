@@ -19,7 +19,7 @@ In ansible_installation/site.yml make sure **"- include: openstack-vm-provision.
 ```
 
 In ansible_installation/inventory leave **[vm_group]** empty
-```yml
+```conf
 [openstack-controller]
 10.143.0.240 ansible_user=localadmin ansible_python_interpreter="~/ansible_venv/bin/python"
 
