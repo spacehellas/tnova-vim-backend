@@ -10,19 +10,31 @@ the [GNU General Public License v3.0](LICENSE.txt).
 
 ## Quick Start
 
-**Step 1.** Launch an InfluxDB container:
+**Step 1.** Download collectd's types.db:
 
 ```sh
-docker run --name tnova-monitoring-influxdb -d \
-    -e ADMIN_USER="root" -e INFLUXDB_INIT_PWD="root" \
-    -e PRE_CREATE_DB="statsdb" -e COLLECTD_DB="statsdb" \
-    -e COLLECTD_BINDING=':25826' -e COLLECTD_RETENTION_POLICY="statspolicy" \
-    --publish 8083:8083 --publish 8086:8086 --publish 25826:25826/udp \
-    --volume=/var/influxdb:/data \
-    tutum/influxdb:0.12
+mkdir tnova_vim
+cd tnova_vim
+curl -LO https://github.com/collectd/collectd/raw/master/src/types.db
 ```
 
-**Step 2.** Launch the monitoring container:
+**Step 2.** Launch an InfluxDB container:
+
+```sh
+docker run -d --name tnova-monitoring-influxdb \
+    --restart always \
+    -p 8083:8083 -p 8086:8086 -p 25826:25826/udp \
+    -v $PWD/influxdata:/var/lib/influxdb \
+    -v $PWD/types.db:/usr/share/collectd/types.db \
+    -e INFLUXDB_REPORTING_DISABLED=true \
+    -e INFLUXDB_COLLECTD_ENABLED=true \
+    -e INFLUXDB_COLLECTD_BIND_ADDRESS=":25826" \
+    -e INFLUXDB_COLLECTD_DATABASE="statsdb" \
+    -e INFLUXDB_COLLECTD_TYPESDB="/usr/share/collectd/types.db" \
+    influxdb:alpine
+```
+
+**Step 3.** Launch the monitoring container:
 
 ```sh
 docker run --name=tnova-vim-backend -d \
