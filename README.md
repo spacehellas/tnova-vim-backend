@@ -58,4 +58,5 @@ node app.js
 ## More information
 
 * [Deploying T-NOVA VIM Monitoring Back-End](documentation/deploying.md)
+* [Deploying T-NOVA VIM Monitoring Back-End using Ansible](contrib/ansible/README.md)
 * [Building the official Docker image](documentation/building.md)
