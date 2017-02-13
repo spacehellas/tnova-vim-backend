@@ -15,36 +15,40 @@ accordingly the monitoring agents](#configuring-the-monitoring-agents).
 ### InfluxDB
 
 The monitoring back-end requires an [InfluxDB](https://influxdata.com/)
-instance to host the monitoring data. The [Docker image by
-Tutum](https://github.com/tutumcloud/influxdb) is used in the T-NOVA testing
+instance to host the monitoring data. The [official Docker
+image](https://hub.docker.com/_/influxdb/) is used in the T-NOVA testing
 infrastructure and is highly recommended.
 
 Run it with the following command:
 
 ``` command-line
-docker run --name influxdb -d --restart=always \
-    --env 'PRE_CREATE_DB=statsdb' \
-    --env 'COLLECTD_DB=statsdb' --env 'COLLECTD_BINDING=:8096' \
-    --volume /srv/docker/tnova_vim/tsdb:/data \
-    --publish 8083:8083 --publish 8086:8086 --publish 8096:8096/udp \
-    tutum/influxdb:0.9
+docker run -d --name influxdb \
+    --restart always \
+    -p 8083:8083 -p 8086:8086 -p 25826:25826/udp \
+    -v $PWD/influxdata:/var/lib/influxdb \
+    -v $PWD/types.db:/usr/share/collectd/types.db \
+    -e INFLUXDB_REPORTING_DISABLED=true \
+    -e INFLUXDB_COLLECTD_ENABLED=true \
+    -e INFLUXDB_COLLECTD_BIND_ADDRESS=":25826" \
+    -e INFLUXDB_COLLECTD_DATABASE="statsdb" \
+    -e INFLUXDB_COLLECTD_TYPESDB="/usr/share/collectd/types.db" \
+    influxdb:alpine
 ```
 
 The `docker run` command above had the following options:
 
-* `--name influxdb`: This is an identifier of the Docker container.
 * `-d`: This is to start the container in detached mode.
+* `--name influxdb`: This is an identifier of the Docker container.
 * `--restart=always`: Always restart the container regardless of the exit
   status. This is to ensure starting the container during the Docker daemon
   start, in case the host restarts.
-* `--env` options: This is to ensure that a database (*statsdb* in the example)
-  is created on the first time the container runs, that this database is used
-  for storing collectd data and that the InfluxDB is listening for collectd
-  connections on the specified port.
 * `--volume` option: The only data volume is used here to persist the database
   files.
-* `--publish` options: The published port 8083 provides an HTTP user interface,
-  port 8096 an HTTP API and port 8096 the collectd interface.
+* `-p` options: The published port 8083 provides an HTTP user interface,
+  port 8096 an HTTP API and port 25826 the collectd interface.
+* `--env` options: This is to create the database (*statsdb* in the example)
+  that is going to be used for storing collectd data, and to set the listening
+  port for collectd connections.
 
 ### Monitoring Back-End
 

@@ -1,0 +1,45 @@
+---
+DOCKER:
+  API_VERSION: 1.18
+
+INFLUX:
+  NAME: influxdb
+  PRE_CREATE_DB: statsdb
+  COLLECTD_DB: statsdb
+  COLLECTD_BINDING: ":8096"
+  VOLUMES:
+  - /srv/docker/tnova_vim/tsdb:/data
+#  VOLUMES: /srv/docker/tnova_vim/tsdb:/data
+  PORTS:
+  - "8083:8083"
+  - "8086:8086"
+  - "8096:8096/udp"
+  IMAGE: "tutum/influxdb:0.9"
+
+
+MON_BACKEND:
+  NAME: monitoring_backend
+  CEILOMETER_HOST: 10.143.0.240
+  CEILOMETER_PORT: 8777
+  POLLING_INTERVAL: 60000
+  NOVA_HOST: 10.143.0.240
+  NOVA_PORT: 8774
+  IDENTITY_HOST: 10.143.0.240
+  IDENTITY_PORT: 5000
+  IDENTITY_TENANT: admin
+  IDENTITY_USERNAME: admin
+  IDENTITY_PASSWORD: enter_password_here
+  VOLUMES:
+#  - /srv/docker/tnova_vim/tsdb:/data
+  - /srv/docker/tnova_vim/subscriptions.json:/subscriptions.json
+  PORTS:
+  - "8080:3000"
+  LINKS:
+  - "influxdb:influxdb"
+  IMAGE: "spacehellas/tnova-vim-backend:latest"
+
+GRAFANA:
+  NAME: grafana
+  PORTS:
+  - "3000:3000"
+  IMAGE: "grafana/grafana:latest"

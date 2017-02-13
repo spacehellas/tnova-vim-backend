@@ -1,15 +1,18 @@
 tsdb:
-  image: tutum/influxdb:0.9
+  image: influxdb:alpine
   environment:
-    - PRE_CREATE_DB=statsdb
-    - COLLECTD_DB=statsdb
-    - COLLECTD_BINDING=:8096
+    - INFLUXDB_REPORTING_DISABLED=true
+    - INFLUXDB_COLLECTD_ENABLED=true
+    - INFLUXDB_COLLECTD_BIND_ADDRESS=":25826"
+    - INFLUXDB_COLLECTD_DATABASE="statsdb"
+    - INFLUXDB_COLLECTD_TYPESDB="/usr/share/collectd/types.db"
   ports:
     - "8083:8083"
     - "8086:8086"
-    - "8096:8096/udp"
+    - "25826:25826/udp"
   volumes:
     - /srv/docker/tnova_vim/tsdb:/data
+    - /srv/docker/tnova_vim/types.db:/usr/share/collectd/types.db
 tnova-monitoring:
   image: tnova/vim-backend:latest
   environment:
